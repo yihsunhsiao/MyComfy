@@ -1,0 +1,88 @@
+{
+  "last_node_id": 10,
+  "last_link_id": 10,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [100, 100],
+      "widgets_values": ["v1-5-pruned-emaonly.safetensors"]
+    },
+    {
+      "id": 2,
+      "type": "CLIPTextEncode",
+      "pos": [100, 300],
+      "title": "Negative Prompt",
+      "widgets_values": ["low quality, blurry, text, watermark"]
+    },
+    {
+      "id": 3,
+      "type": "PrimitiveStringMultiline",
+      "pos": [100, 500],
+      "title": "Raw Text Input",
+      "widgets_values": ["A rain-slicked urban street in a dense metropolis at midnight...
+A close-up, high-angle shot...
+An expansive, wide-angle landscape..."]
+    },
+    {
+      "id": 4,
+      "type": "BatchPromptSchedule",
+      "pos": [500, 100],
+      "widgets_values": [
+        ""0": "A rain-slicked urban street in a dense metropolis at midnight. The focus is on vibrant neon signage in shades of electric blue and amber, reflecting in deep puddles on the asphalt. Glowing billboards and flickering LED screens fill the air with light. No central people, just the heavy, high-contrast atmosphere of a city that never sleeps. Cinematic 35mm style, sharp reflections, nocturnal energy.",
+"120": "A close-up, high-angle shot of a minimalist luxury apartment balcony overlooking a blurred city. A single white T-shirt is draped over a modern chair, catching the blue glow of distant city lights. An open window lets in a soft, hazy mist that mimics the lingering scent of perfume. The lighting is a blend of cool exterior blue and a warm, dim interior glow. Focus on textures of fabric, glass, and the distant bokeh of traffic.",
+"240": "An expansive, wide-angle landscape of the city skyline during the blue hour just before sunrise. A light morning frost and a cool, crisp fog roll over the skyscrapers as the seasons change. The vibrant neons have dimmed, leaving a monochromatic blue palette. The sky is a vast gradient of deep navy to pale grey. The scene is quiet, empty, and bittersweet. Photorealistic, cinematic wide shot, serene and cold."",
+        240,
+        true,
+        0,
+        0
+      ]
+    },
+    {
+      "id": 5,
+      "type": "ADE_AnimateDiffLoaderGen1",
+      "pos": [500, 500],
+      "widgets_values": ["v3_sd15_mm.ckpt", "sqrt_linear (AnimateDiff)"]
+    },
+    {
+      "id": 6,
+      "type": "EmptyLatentImage",
+      "pos": [900, 500],
+      "widgets_values": [512, 512, 240]
+    },
+    {
+      "id": 7,
+      "type": "KSampler",
+      "pos": [900, 100],
+      "widgets_values": [888, "fixed", 20, 7.0, "euler_a", "simple", 1.0]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [1300, 100]
+    },
+    {
+      "id": 9,
+      "type": "VHS_VideoCombine",
+      "pos": [1600, 100],
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "TextToVideo_10s",
+        "format": "video/h264-mp4",
+        "save_output": true
+      }
+    }
+  ],
+  "links": [
+    [1, 1, 0, 4, 0, "CLIP"],
+    [2, 1, 0, 5, 0, "MODEL"],
+    [3, 5, 0, 7, 0, "MODEL"],
+    [4, 4, 0, 7, 1, "CONDITIONING"],
+    [5, 2, 0, 7, 2, "CONDITIONING"],
+    [6, 6, 0, 7, 3, "LATENT"],
+    [7, 7, 0, 8, 0, "LATENT"],
+    [8, 1, 2, 8, 1, "VAE"],
+    [9, 8, 0, 9, 0, "IMAGE"]
+  ]
+}
